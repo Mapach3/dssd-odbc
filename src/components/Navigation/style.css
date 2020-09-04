@@ -1,0 +1,17 @@
+.formRows{
+    text-align: left;
+}
+
+.containerStyle{
+    max-width: 90% !important;
+}
+
+.actColumn{
+    border: 2px solid #00c9ff;
+    border-radius: 10px;
+}
+
+.secondColumn {
+    height: 2rem;
+}
+
