@@ -2,6 +2,7 @@ import React from 'react';
 import {Container, Row, Col,Tabs,Tab} from 'react-bootstrap'
 import {CreateUser} from '../CreateUser/index'
 import {DropUser} from '../DropUser/index'
+import {UpdateUser} from '../UpdateUser/index'
 import './style.css'
 
 export class Navigation extends React.Component {
@@ -46,7 +47,8 @@ export class Navigation extends React.Component {
                             </Col>
                         </Tab>
 
-                        <Tab eventKey="update" title="Actualizar Usuario" disabled>
+                        <Tab eventKey="update" title="Actualizar Usuario">
+                            <UpdateUser />
                         </Tab>
 
                         <Tab eventKey="search" title="Búsqueda de Usuario" disabled>
