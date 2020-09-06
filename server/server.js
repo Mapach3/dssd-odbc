@@ -76,6 +76,36 @@ app.post('/insertUser',cors(), (request, response) =>  {
 }
 )
 
+/*POST deleteUser*/ 
+app.options('/deleteUser', (request, response) => {
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader('Access-Control-Allow-Methods', '*');
+    response.setHeader("Access-Control-Allow-Headers", "*");
+    response.end();
+})
+app.post('/deleteUser',cors(), (request, response) =>  {
+    var data = request.body
+
+    const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
+         
+        connection.query("CALL drop_customer('"+data.email+"');",
+            (error, result) => {
+                if (error) {
+                    console.log("Error en POST DropCustomer: ")
+                    console.log(error)
+                    response.send(JSON.stringify(error))
+                }
+                else{
+                    console.log("Success in DropCustomer! ")
+                    console.log(result)
+                    response.send(JSON.stringify(result))
+                }
+            }
+        )
+    })
+}
+)
+
 
 
 app.listen(port, () => {

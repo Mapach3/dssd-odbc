@@ -25,7 +25,7 @@ export class Navigation extends React.Component {
     
 
     render(){
-        return (    <>
+        return (    <Container className="containerStyle">
                 <Row className="justify-content-md-center">
                     <Col>
                         <h2>Desarrollo de Software en Sistemas Distribuidos</h2>
@@ -34,7 +34,7 @@ export class Navigation extends React.Component {
                 </Row>
                 
                     <Tabs defaultActiveKey="insert" id="uncontrolled-tab-example" onSelect={this.handleSelect}>
-                        <Tab eventKey="insert" title="Insertar Usuario" className="centerTabContent">
+                        <Tab eventKey="insert" title="Alta de Usuario" className="centerTabContent">
                             <Col className="actColumn justify-content-md-center">
                                 <CreateUser />
                             </Col>
@@ -52,7 +52,7 @@ export class Navigation extends React.Component {
                         <Tab eventKey="search" title="Búsqueda de Usuario" disabled>
                         </Tab>
                     </Tabs>
-    </>)
+    </Container>)
 }
 
 }
