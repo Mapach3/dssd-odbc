@@ -58,18 +58,18 @@ export class DropUser extends Component{
                <Table bordered>
                    <thead>
                        <tr>
-                       <th>ID</th>
-                       <th>Nombre</th>
-                       <th>Apellido</th>
-                       <th>E-Mail</th>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>E-Mail</th>
                        </tr>
                    </thead>
                    <tbody>
                        <tr>
-                       <td>{user.customer_id}</td>
-                       <td>{user.first_name}</td>
-                       <td>{user.last_name}</td>
-                       <td>{user.email}</td>
+                        <td>{user.customer_id}</td>
+                        <td>{user.first_name}</td>
+                        <td>{user.last_name}</td>
+                        <td>{user.email}</td>
                        </tr>
                    </tbody>
                </Table>
@@ -88,7 +88,6 @@ export class DropUser extends Component{
                         </Form.Group>
                     </Col>
                 </Row>
-
                 <Button variant="primary" type="submit" onClick={(e) => this.deleteUser(e)}>
                     Eliminar
                 </Button> 
@@ -97,7 +96,6 @@ export class DropUser extends Component{
             {Object.keys(this.state.deletedUser).length != 0 ? 
             this.showDeletedUserData() : null}
             <br />
-
         </>
     }
 

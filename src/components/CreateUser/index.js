@@ -228,7 +228,6 @@ export class CreateUser extends Component{
                     </Col>
                 </Row>
 
-
                 <Button variant="primary" type="submit" onClick={(e) => this.sendData(e)}>
                     Enviar
                 </Button> 

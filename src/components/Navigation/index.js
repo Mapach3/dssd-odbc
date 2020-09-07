@@ -48,7 +48,10 @@ export class Navigation extends React.Component {
                         </Tab>
 
                         <Tab eventKey="update" title="Actualizar Usuario">
-                            <UpdateUser />
+                            <Col className="actColumn justify-content-md-center">
+                                <UpdateUser />
+                            </Col>
+                            
                         </Tab>
 
                         <Tab eventKey="search" title="Búsqueda de Usuario" disabled>
