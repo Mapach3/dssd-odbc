@@ -113,22 +113,25 @@ app.options('/getUser', (request, response) => {
     response.setHeader("Access-Control-Allow-Headers", "*");
     response.end();
 })
-app.post('/getUser',cors(), (request, response) =>  {
+app.get('/getUser',cors(), (request, response) =>  {
     var email = request.query.userEmail
 
     const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
          
-        connection.query("SELECT * from customer where customer.email='"+email+"';",
-            (error, result) => {
-                if (error) {
-                    console.log("Error en GET GetCustomer: ")
-                    console.log(error)
-                    response.send(JSON.stringify(error))
-                }
-                else{
-                    console.log(result)
-                    response.send(JSON.stringify(result))
-                }
+        connection.query("SELECT customer_id, customer.address_id, first_name, store_id,last_name,email,address,district,city.city_id as city_id, postal_code,phone,country_id from customer"+
+                         " inner join address on customer.address_id=address.address_id"+
+                         " inner join city on address.city_id=city.city_id"+
+                         " where customer.email = '"+email+"';", (error, result) =>
+            {
+            if (error) {
+                console.log("Error en GET GetCustomer: ")
+                console.log(error)
+                response.send(JSON.stringify(error))
+            }
+            else{
+                console.log(result)
+                response.send(JSON.stringify(result))
+            }
             }
         )
     })

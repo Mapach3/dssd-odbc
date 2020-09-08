@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Form, Button,Row,Col} from 'react-bootstrap'
-import {__API_COUNTRIES,__API_CITIES} from '../../consts/consts'
+import {__API_COUNTRIES,__API_CITIES, __API_GET_USER} from '../../consts/consts'
 import axios from 'axios';
 import {Typeahead} from 'react-bootstrap-typeahead'
 
@@ -14,8 +14,10 @@ export class UpdateUser extends Component{
             countryList : [],
             cityList : [],
             userFound : false,
-            message : ''
+            message : '',
+
         }
+
     }
     
     componentDidMount(){
@@ -31,27 +33,31 @@ export class UpdateUser extends Component{
 
     }
 
-    findCountryCities(name){
+     findCountryCities(form,cityId=0){
         debugger;
-        if (name.length != 0){
-            var url = __API_CITIES
-            const countryId = this.state.countryList.find( ctry => ctry.name == name).id
-            url+="/"+countryId
+        var url = __API_CITIES+"/"
+        const countryId = form.elements.country.value
+        
+        url+=countryId
+
+        axios.get(url).then(response => {
+            debugger;
             
-            axios.get(url).then(response => {
-                debugger;
-                var cities = response.data
-                this.setState({cityList : cities})
-            }).catch(error =>{
-                debugger;
-                console.log("Error getting Cities: ",error)
-            })
-        }
-        this.setState({cityList : []})
+            var cities = response.data
+            
+            this.setState({cityList : cities})
+            
+            if (cityId != 0){
+                form.elements.city.value = cityId
+            }
+            
+        }).catch(error =>{
+            debugger;
+            console.log("Error getting Cities: ",error)
+        })
     }
 
     findUserForUpdate(e) {
-        
         e.preventDefault()
         const form = e.target.form
 
@@ -61,31 +67,64 @@ export class UpdateUser extends Component{
             this.setState({message : "Por favor, ingrese un E-mail válido."})
         }
         else{
-            this.setState({userFound : true})
-            this.setState({message : ''})
+            debugger
+            const options = {
+                url :  __API_GET_USER+"?userEmail="+email,
+                method : 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }
+            axios(options).then( resp => {
+                debugger;
+                var userInfo = resp.data[0]
+                if (userInfo == undefined) {
+                    this.setState({message:"ERROR: No se encontró ningun usuario con ese E-mail."})
+                }else{
+                    this.setState({message:'',
+                                   userFound : true})
+                    
+                    var form = document.getElementById('newUserForm')
+                    var formElements = form.elements
+                     debugger;
 
-            // const options = {
-            //     url : __API_DELETE_USER,
-            //     method : 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     data : {
-            //         email: email,
-            //     }
-            // }
+                    //set form values based on what was returned from the server.
+                    formElements.nombre.value = userInfo.first_name
+                    formElements.apellido.value = userInfo.last_name
+                    formElements.email.value = userInfo.first_name
+                    formElements.store.value = userInfo.store_id
 
-            // axios(options).then( resp => {
-            //     debugger;
-            //     var deletedUser = resp.data[0]
-            //     if (deletedUser == undefined) {
-            //         this.setState({message:"ERROR: No se encontró ningun usuario con ese E-mail."})
-            //     }else{
-            //         this.setState({message:"El siguiente usuario fue dado de baja: ",
-            //                        deletedUser : deletedUser})
-            //     }
-            // })
+                    formElements.address.value = userInfo.address
+                    formElements.district.value = userInfo.district
+                    formElements.country.value = this.state.countryList.find( ctry => ctry.id == userInfo.country_id).id
+                    this.findCountryCities(form,userInfo.city_id)
+                    
+                    //formElements.city.value = this.state.cityList.find(city => city.id == userInfo.city_id).id
+                    formElements.phone.value = userInfo.phone
+                    formElements.postcode.value = userInfo.postal_code
+
+
+                    
+                }
+            })
         }
+    }
+
+    updateUser(e) {
+        var form = e.target.form
+        var name = form.elements.nombre.value
+        var surname = form.elements.apellido.value
+        var email = form.elements.email.value
+        var store = form.elements.store.value
+
+        var address = form.elements.address.value
+        var district = form.elements.district.value
+        var postcode = form.elements.postcode.value
+        var phone = form.elements.phone.value
+
+        var city = form.elements.cities.value
+
+
     }
 
     render(){
@@ -108,7 +147,7 @@ export class UpdateUser extends Component{
             this.state.message}
 
             {!this.state.userFound ? null : 
-             <Form>
+             <Form id="newUserForm">
                 <p><b>Información Personal</b></p>
                 <Row>
                     <Col>
@@ -177,32 +216,27 @@ export class UpdateUser extends Component{
                     <Col>
                         <Form.Group controlId="formCountry" >
                             <Form.Label>País</Form.Label>
-                                <Typeahead 
-                                id="countries" 
-                                emptyLabel="Sin coincidencias." 
-                                paginationText="Mostrar más resultados..." 
-                                placeholder="Seleccione País" 
-                                options={this.state.countryList.map(ctry => ctry.name)}//aca va el array de countries
-                                onChange={(name) => this.findCountryCities(name)}
-                                /> 
+                            <Form.Control as="select" name="country" onChange= { (e) => this.findCountryCities(e.target.form)}>
+                                {this.state.countryList.map( ctry => 
+                                <option key={ctry.id} value={ctry.id}>{ctry.name}</option>)
+                                }
+                            </Form.Control>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group controlId="formCity" >
                             <Form.Label>Ciudad</Form.Label>
-                            <Typeahead 
-                                id="cities" 
-                                emptyLabel="Sin coincidencias." 
-                                paginationText="Mostrar más resultados..." 
-                                placeholder="Seleccione Ciudad" 
-                                options={this.state.cityList.map(city => city.name)} //aca va el array de cities
-                                /> 
+                            <Form.Control as="select" name="city">
+                                {this.state.cityList.map( city => 
+                                <option key={city.id} value={city.id}>{city.name}</option>)
+                                }
+                            </Form.Control>
                         </Form.Group>
                     </Col>
                 </Row>
 
-                <Button variant="primary" type="submit" >
-                    Enviar
+                <Button variant="primary" type="submit" onClick={(e) => this.updateUser(e)}>
+                    Actualizar
                 </Button> 
             </Form>}
 
