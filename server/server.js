@@ -106,6 +106,35 @@ app.post('/deleteUser',cors(), (request, response) =>  {
 }
 )
 
+/*GET getUser*/ 
+app.options('/getUser', (request, response) => {
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader('Access-Control-Allow-Methods', '*');
+    response.setHeader("Access-Control-Allow-Headers", "*");
+    response.end();
+})
+app.post('/getUser',cors(), (request, response) =>  {
+    var email = request.query.userEmail
+
+    const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
+         
+        connection.query("SELECT * from customer where customer.email='"+email+"';",
+            (error, result) => {
+                if (error) {
+                    console.log("Error en GET GetCustomer: ")
+                    console.log(error)
+                    response.send(JSON.stringify(error))
+                }
+                else{
+                    console.log(result)
+                    response.send(JSON.stringify(result))
+                }
+            }
+        )
+    })
+}
+)
+
 
 
 app.listen(port, () => {

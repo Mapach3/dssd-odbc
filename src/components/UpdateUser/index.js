@@ -24,8 +24,6 @@ export class UpdateUser extends Component{
             var countries = response.data
             this.setState({countryList : countries})
 
-
-
         }).catch(error => {
             console.log("Error getting countries: ")
             console.log(error)
