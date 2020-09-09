@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
-import {Form, Button,Row,Col} from 'react-bootstrap'
-import {__API_COUNTRIES,__API_CITIES, __API_GET_USER} from '../../consts/consts'
+import {Form, Button,Row,Col,Table} from 'react-bootstrap'
+import {__API_COUNTRIES,__API_CITIES, __API_GET_USER, __API_UPDATE_USER} from '../../consts/consts'
 import axios from 'axios';
-import {Typeahead} from 'react-bootstrap-typeahead'
 
 
 export class UpdateUser extends Component{
@@ -14,8 +13,10 @@ export class UpdateUser extends Component{
             countryList : [],
             cityList : [],
             userFound : false,
+            userId : 0,
+            userAddressId : 0,
             message : '',
-
+            userUpdated : {}
         }
 
     }
@@ -58,6 +59,10 @@ export class UpdateUser extends Component{
     }
 
     findUserForUpdate(e) {
+        
+        //Put the state back in case it's not the first time a customer is searched.
+        this.setState({userUpdated : {}, userFound : false, message : ''})
+
         e.preventDefault()
         const form = e.target.form
 
@@ -91,7 +96,7 @@ export class UpdateUser extends Component{
                     //set form values based on what was returned from the server.
                     formElements.nombre.value = userInfo.first_name
                     formElements.apellido.value = userInfo.last_name
-                    formElements.email.value = userInfo.first_name
+                    formElements.email.value = userInfo.email
                     formElements.store.value = userInfo.store_id
 
                     formElements.address.value = userInfo.address
@@ -99,10 +104,11 @@ export class UpdateUser extends Component{
                     formElements.country.value = this.state.countryList.find( ctry => ctry.id == userInfo.country_id).id
                     this.findCountryCities(form,userInfo.city_id)
                     
-                    //formElements.city.value = this.state.cityList.find(city => city.id == userInfo.city_id).id
                     formElements.phone.value = userInfo.phone
                     formElements.postcode.value = userInfo.postal_code
 
+                    this.setState({userId : userInfo.customer_id,
+                                    userAddressId : userInfo.address_id})      
 
                     
                 }
@@ -110,7 +116,35 @@ export class UpdateUser extends Component{
         }
     }
 
+    showUpdatedUserData(){
+       const user = this.state.userUpdated
+       return <>
+               <Table bordered>
+                   <thead>
+                       <tr>
+                       <th>ID</th>
+                       <th>Nuevo Nombre</th>
+                       <th>Nuevo Apellido</th>
+                       <th>Nuevo E-Mail</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       <tr>
+                       <td>{user.customer_id}</td>
+                       <td>{user.first_name}</td>
+                       <td>{user.last_name}</td>
+                       <td>{user.email}</td>
+                       </tr>
+                   </tbody>
+               </Table>
+              </>
+
+    }
+
     updateUser(e) {
+        debugger;
+        e.preventDefault()
+
         var form = e.target.form
         var name = form.elements.nombre.value
         var surname = form.elements.apellido.value
@@ -122,10 +156,51 @@ export class UpdateUser extends Component{
         var postcode = form.elements.postcode.value
         var phone = form.elements.phone.value
 
-        var city = form.elements.cities.value
+        var userId = this.state.userId
+        var addressId = this.state.userAddressId
+
+        var city = form.elements.city.value
+
+        if (!(name == "" || surname == "" || email == "" || store == "" || store == "" || address == "" ||
+        district == "" || postcode == "" || phone == "")) 
+        { 
+            const options = {
+                url : __API_UPDATE_USER,
+                method : 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                data : {
+                    name: name,
+                    surname: surname,
+                    email : email,
+                    store : store,
+                    address : address,
+                    district : district,
+                    postCode : postcode,
+                    phone : phone,
+                    city : city,
+                    addressId: addressId,
+                    userId : userId
+                }
+            }
+
+            axios(options).then(response => {
+                console.log("Respuesta recibida: ")
+                console.log(response)
+                debugger;
+                this.setState({userUpdated : response.data[0],
+                               userFound : false,
+                               message: 'Se actualizó correctamente el usuario. Para actualizar, utilice el Nuevo E-Mail: '})
+
+            })  
+
+        } else{
+            this.setState({message : 'Por favor, complete todos los campos.'})
+        }
+ }
 
 
-    }
 
     render(){
         return <>
@@ -237,8 +312,14 @@ export class UpdateUser extends Component{
 
                 <Button variant="primary" type="submit" onClick={(e) => this.updateUser(e)}>
                     Actualizar
-                </Button> 
+                </Button>
+
+
             </Form>}
+
+            
+            {Object.keys(this.state.userUpdated).length != 0 ? 
+                this.showUpdatedUserData() : null}
 
         </>
     }

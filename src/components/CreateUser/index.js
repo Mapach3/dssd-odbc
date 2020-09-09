@@ -234,6 +234,7 @@ export class CreateUser extends Component{
             </Form>
             
             <p><i>{this.state.message}</i></p>
+            
             {Object.keys(this.state.userInserted).length != 0 ? 
             this.showNewUserData() : null}
             <br />
