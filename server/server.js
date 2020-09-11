@@ -10,6 +10,25 @@ var app = express()
 //Parsear el body usando body parser
 app.use(bodyParser.json()); // body en formato json
 
+/*GET Stores*/
+app.get('/getStores',cors(), (request, response) =>  {
+    const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
+        connection.query("select store.store_id as store_id, address, city "+ 
+                         "from store "+
+                         "inner join address on store.address_id=address.address_id "+ 
+                         "inner join city on address.city_id=city.city_id; ",
+            (error, result) => {
+                if (error) {
+                    response.send(JSON.stringify(error))
+                }
+                else{
+                    response.send(JSON.stringify(result))
+                }
+            }
+        )
+    })
+}
+)
 
 /*GET Countries*/ 
 app.get('/getCountries',cors(), (request, response) =>  {

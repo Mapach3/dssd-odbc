@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Form, Button,Row,Col,Table} from 'react-bootstrap'
-import {__API_COUNTRIES,__API_CITIES, __API_GET_USER, __API_UPDATE_USER} from '../../consts/consts'
+import {__API_COUNTRIES,__API_CITIES, __API_GET_USER, __API_UPDATE_USER,__API_STORES} from '../../consts/consts'
 import axios from 'axios';
 
 
@@ -23,12 +23,25 @@ export class UpdateUser extends Component{
     
     componentDidMount(){
         debugger;
-        axios.get(__API_COUNTRIES).then(response => {
-            var countries = response.data
-            this.setState({countryList : countries})
+        axios.get(__API_COUNTRIES)
+        axios.get(__API_STORES)
 
-        }).catch(error => {
-            console.log("Error getting countries: ")
+        axios.all([
+            axios.get(__API_COUNTRIES),
+            axios.get(__API_STORES)
+
+        ]).then(axios.spread((countries, stores) => {
+            var ctries = countries.data
+            var strs = stores.data
+
+            console.log("Countries: ",ctries,"// Stores: ",strs)
+
+            this.setState({countryList : ctries,
+                           storeList : strs })                          
+
+
+        })).catch(error => {
+            console.log("Error getting Countries or Stores in ComponentDidMount() UpdateUser: ")
             console.log(error)
         })
 
@@ -250,8 +263,9 @@ export class UpdateUser extends Component{
                     <Form.Group controlId="formStore">
                         <Form.Label>Tienda</Form.Label>
                         <Form.Control as="select" name="store">
-                            <option value="1">47 MySakila Drive - Alberta</option>
-                            <option value="2">28 MySQL Boulevard - QLD</option>
+                          {this.state.storeList.map( store => 
+                          <option key={store.store_id} value={store.store_id}>{store.address} - {store.city}</option>
+                          )}
                         </Form.Control>
                     </Form.Group>
                 </Col>

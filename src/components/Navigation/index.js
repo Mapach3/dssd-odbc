@@ -17,8 +17,6 @@ export class Navigation extends React.Component {
     }
 
     handleSelect = (selectedTab) => {
-        debugger;
-        console.log("Tab Change!")
         this.setState({
             activeTab: selectedTab
           });

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import axios from 'axios'
 import {Form, Button,Row,Col, Table} from 'react-bootstrap'
-import { __API_COUNTRIES,__API_CITIES,__API_INSERT_USER} from '../../consts/consts'
+import { __API_COUNTRIES,__API_CITIES,__API_INSERT_USER, __API_STORES} from '../../consts/consts'
 
 export class CreateUser extends Component{
     constructor(props){
@@ -10,24 +10,33 @@ export class CreateUser extends Component{
                       cityList : [],
                       userInserted : {},
                       message : '',
+                      storeList : []
                        }
 
     }
     componentDidMount(){
         debugger;
-        axios.get(__API_COUNTRIES).then(response => {
-            var countries = response.data
-            this.setState({countryList : countries})
+        axios.get(__API_COUNTRIES)
+        axios.get(__API_STORES)
+
+        axios.all([
+            axios.get(__API_COUNTRIES),
+            axios.get(__API_STORES)
+
+        ]).then(axios.spread((countries, stores) => {
+            var ctries = countries.data
+            var strs = stores.data
+            this.setState({countryList : ctries,
+                           storeList : strs })
+                            
 
             this.findCountryCities()
 
 
-        }).catch(error => {
-            console.log("Error getting countries: ")
+        })).catch(error => {
+            console.log("Error getting Countries or Stores in ComponentDidMount() CreateUser: ")
             console.log(error)
         })
-
-
 
     }
 
@@ -168,8 +177,9 @@ export class CreateUser extends Component{
                     <Form.Group controlId="formStore">
                         <Form.Label>Tienda</Form.Label>
                         <Form.Control as="select" name="store">
-                            <option value="1">47 MySakila Drive - Alberta</option>
-                            <option value="2">28 MySQL Boulevard - QLD</option>
+                            {this.state.storeList.map( store => 
+                            <option key={store.store_id} value={store.store_id}>{store.address} - {store.city}</option>
+                            )}
                         </Form.Control>
                     </Form.Group>
                 </Col>
