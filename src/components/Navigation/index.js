@@ -3,6 +3,7 @@ import {Container, Row, Col,Tabs,Tab} from 'react-bootstrap'
 import {CreateUser} from '../CreateUser/index'
 import {DropUser} from '../DropUser/index'
 import {UpdateUser} from '../UpdateUser/index'
+import {SearchUser} from '../SearchUser/index'
 import './style.css'
 
 export class Navigation extends React.Component {
@@ -52,7 +53,10 @@ export class Navigation extends React.Component {
                             
                         </Tab>
 
-                        <Tab eventKey="search" title="Búsqueda de Usuario" disabled className="centerTabContent">
+                        <Tab eventKey="search" title="Búsqueda de Usuario" className="centerTabContent">
+                            <Col className="actColumn searchColumn justify-content-md-center">
+                                <SearchUser />
+                            </Col>
                         </Tab>
                     </Tabs>
     </Container>)

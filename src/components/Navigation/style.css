@@ -13,6 +13,10 @@
     max-width: 40% !important;
 }
 
+.searchColumn{
+    max-width:50% !important;
+}
+
 .secondColumn {
     height: 2rem;
 }

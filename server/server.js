@@ -47,7 +47,7 @@ app.get('/getCountries',cors(), (request, response) =>  {
 }
 )
 
-/*GET Cities*/ 
+/*GET CitiesByCountry*/ 
 app.get('/getCitiesByCountry/:cId',cors(), (request, response) =>  {
     const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
         connection.query("SELECT city_id as id, city as name from CITY where country_id="+request.params.cId,
@@ -63,6 +63,25 @@ app.get('/getCitiesByCountry/:cId',cors(), (request, response) =>  {
     })
 }
 )
+
+/*GET AllCities*/ 
+app.get('/getAllCities',cors(), (request, response) =>  {
+    const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
+        connection.query("SELECT city_id as id, city as name FROM sakila.city order by name asc; ",
+            (error, result) => {
+                if (error) {
+                    response.send(JSON.stringify(error))
+                }
+                else{
+                    response.send(JSON.stringify(result))
+                }
+            }
+        )
+    })
+}
+)
+
+
 
 /*POST InsertUser*/ 
 app.options('/insertUser', (request, response) => {

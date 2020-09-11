@@ -89,7 +89,7 @@ export class DropUser extends Component{
                     </Col>
                 </Row>
                 <Button variant="primary" type="submit" onClick={(e) => this.deleteUser(e)}>
-                    Eliminar
+                    Eliminar Usuario
                 </Button> 
             </Form>
             <p><i>{this.state.message}</i></p>

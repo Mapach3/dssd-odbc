@@ -33,9 +33,7 @@ export class UpdateUser extends Component{
         ]).then(axios.spread((countries, stores) => {
             var ctries = countries.data
             var strs = stores.data
-
-            console.log("Countries: ",ctries,"// Stores: ",strs)
-
+            
             this.setState({countryList : ctries,
                            storeList : strs })                          
 
@@ -222,7 +220,7 @@ export class UpdateUser extends Component{
                 <Row>
                     <Col>
                         <Form.Group controlId="formMail">
-                            <Form.Control  maxlength="50" type="text" placeholder="emailejemplo@hotmail.com" name="updateEmail"/>
+                            <Form.Control  maxlength="50" type="email" placeholder="emailejemplo@hotmail.com" name="updateEmail"/>
                         </Form.Group>
                     </Col>
                 </Row>
