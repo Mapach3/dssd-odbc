@@ -109,7 +109,7 @@ export class SearchUser extends Component{
     render(){
         return <>
                 <Form>
-                    <p><b>Ingrese parámetros para buscar usuarios</b></p>
+                    <p><b>Ingrese parámetros para buscar clientes</b></p>
                     <Row>
                         <Col>
                             <Form.Group controlId="formName">
@@ -120,7 +120,7 @@ export class SearchUser extends Component{
                         <Col>
                             <Form.Group controlId="formSurname">
                                 <Form.Label>Apellido</Form.Label>
-                                <Form.Control  maxlength="45" type="text" placeholder="emailejemplo@hotmail.com" name="surname"/>
+                                <Form.Control  maxlength="45" type="text" placeholder="Ingrese apellido" name="surname"/>
                             </Form.Group>
                         </Col>
                         <Col>

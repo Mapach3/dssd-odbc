@@ -43,9 +43,9 @@ export class DropUser extends Component{
                 debugger;
                 var deletedUser = resp.data[0]
                 if (deletedUser == undefined) {
-                    this.setState({message:"ERROR: No se encontró ningun usuario con ese E-mail."})
+                    this.setState({message:"ERROR: No se encontró ningun cliente con ese E-mail."})
                 }else{
-                    this.setState({message:"El siguiente usuario fue dado de baja: ",
+                    this.setState({message:"El siguiente cliente fue dado de baja: ",
                                    deletedUser : deletedUser})
                 }
             })
@@ -80,7 +80,7 @@ export class DropUser extends Component{
     render(){
         return <>
             <Form>
-                <p><b>Escriba el E-mail de un usuario: </b></p>
+                <p><b>Escriba el E-mail de un cliente: </b></p>
                 <Row>
                     <Col>
                         <Form.Group controlId="formMail">
@@ -89,7 +89,7 @@ export class DropUser extends Component{
                     </Col>
                 </Row>
                 <Button variant="primary" type="submit" onClick={(e) => this.deleteUser(e)}>
-                    Eliminar Usuario
+                    Eliminar Cliente
                 </Button> 
             </Form>
             <p><i>{this.state.message}</i></p>

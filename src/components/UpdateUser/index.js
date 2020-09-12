@@ -95,7 +95,7 @@ export class UpdateUser extends Component{
                 debugger;
                 var userInfo = resp.data[0]
                 if (userInfo == undefined) {
-                    this.setState({message:"ERROR: No se encontró ningun usuario con ese E-mail."})
+                    this.setState({message:"ERROR: No se encontró ningun cliente con ese E-mail."})
                 }else{
                     this.setState({message:'',
                                    userFound : true})
@@ -202,7 +202,7 @@ export class UpdateUser extends Component{
                 debugger;
                 this.setState({userUpdated : response.data[0],
                                userFound : false,
-                               message: 'Se actualizó correctamente el usuario. Para actualizar, utilice el Nuevo E-Mail: '})
+                               message: 'Se actualizó correctamente el cliente. Para actualizar, utilice el Nuevo E-Mail: '})
 
             })  
 
@@ -216,7 +216,7 @@ export class UpdateUser extends Component{
     render(){
         return <>
             <Form>
-                <p><b>Escriba el E-mail de un usuario: </b></p>
+                <p><b>Escriba el E-mail de un cliente: </b></p>
                 <Row>
                     <Col>
                         <Form.Group controlId="formMail">
@@ -225,7 +225,7 @@ export class UpdateUser extends Component{
                     </Col>
                 </Row>
                 <Button variant="primary" type="submit" onClick={(e) => this.findUserForUpdate(e)}>
-                    Buscar Usuario
+                    Buscar cliente
                 </Button> 
             </Form>
             <br />

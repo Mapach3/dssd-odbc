@@ -87,7 +87,7 @@ export class CreateUser extends Component{
                     console.log(response)
 
 
-                    this.setState({message: 'Datos del usuario agregado: ',
+                    this.setState({message: 'Datos del cliente agregado: ',
                     userInserted : response.data[0]})
                     debugger;
                 })  

@@ -34,26 +34,26 @@ export class Navigation extends React.Component {
                 </Row>
                 
                     <Tabs defaultActiveKey="insert" id="uncontrolled-tab-example" onSelect={this.handleSelect}>
-                        <Tab eventKey="insert" title="Alta de Usuario" className="centerTabContent">
+                        <Tab eventKey="insert" title="Alta de Cliente" className="centerTabContent">
                             <Col className="actColumn justify-content-md-center">
                                 <CreateUser />
                             </Col>
                         </Tab>
 
-                        <Tab eventKey="remove" title="Baja de Usuario" className="centerTabContent">
+                        <Tab eventKey="remove" title="Baja de Cliente" className="centerTabContent">
                             <Col className="actColumn justify-content-md-center">
                                 <DropUser />
                             </Col>
                         </Tab>
 
-                        <Tab eventKey="update" title="Actualizar Usuario" className="centerTabContent">
+                        <Tab eventKey="update" title="Actualizar Cliente" className="centerTabContent">
                             <Col className="actColumn justify-content-md-center">
                                 <UpdateUser />
                             </Col>
                             
                         </Tab>
 
-                        <Tab eventKey="search" title="Búsqueda de Usuario" className="centerTabContent">
+                        <Tab eventKey="search" title="Búsqueda de Cliente" className="centerTabContent">
                             <Col className="actColumn searchColumn justify-content-md-center">
                                 <SearchUser />
                             </Col>
