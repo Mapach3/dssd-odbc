@@ -1,16 +1,18 @@
 import Axios from 'axios'
 import React,{Component} from 'react'
-import {Form, Row, Col, Button} from 'react-bootstrap'
+import {Form, Row, Col, Button, Table} from 'react-bootstrap'
 import {Typeahead} from 'react-bootstrap-typeahead'
 import axios from 'axios'
-import { __API_ALL_CITIES } from '../../consts/consts'
+import { __API_ALL_CITIES, __API_FIND_USERS } from '../../consts/consts'
 
 
 export class SearchUser extends Component{
 
     state = {
         cities : [],
-        chosenCity : null
+        chosenCity : 0,
+        message : '',
+        searchResults : []
     }
 
 
@@ -26,17 +28,88 @@ export class SearchUser extends Component{
 
     setChosenCitiy(name){
         debugger;
-        this.setState({chosenCity : name == undefined ? null : name})
+        if (name == undefined){
+            this.setState({chosenCity : 0 })
+        }
+        else{
+        this.setState({chosenCity : this.state.cities.find(city => city.name == name).id })
+        }
 
     }
 
-    // findUsers(){}
+    findUsers(e){
+        e.preventDefault()
+        
+        var form = e.target.form;
+        var name = form.elements.name.value
+        var surname = form.elements.surname.value
+        var city = this.state.chosenCity == 0 ? "" : this.state.chosenCity
+
+        if (name.length == 0 && surname.length == 0 && city.length == 0){
+            this.setState({message : 'Por favor, ingrese por lo menos un dato para la búsqueda.'})
+        }
+        else{
+            debugger;
+            const options = {
+                url : __API_FIND_USERS+"?name="+name+"&surname="+surname+"&city="+city,
+                method : "GET",
+                headers : {
+                    'Content-Type': 'application/json',
+                }
+            }
+
+            axios(options).then( response => {
+                var results = response.data
+
+                if (response.data.length == 0){
+                    this.setState({message : 'No hay resultados para esa búsqueda.',
+                                  searchResults : []})
+                }
+                else{
+                    this.setState({message : 'Se encontraron los siguientes resultados: ',
+                                   searchResults : results})
+                }
+                
+            })
+
+
+        }
+    }
+    showSearchResults(searchResults){
+        return <>
+        <Table bordered>
+            <thead>
+                <tr>
+                 <th>Nombre</th>
+                 <th>Apellido</th>
+                 <th>E-Mail</th>
+                 <th>Dirección</th>
+                 <th>Teléfono</th>
+                 <th>Ciudad</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {searchResults.map(result =>
+                    <tr>
+                        <td>{result.first_name}</td>
+                        <td>{result.last_name}</td>
+                        <td>{result.email}</td>
+                        <td>{result.address}</td>
+                        <td>{result.phone}</td>
+                        <td>{result.city}</td>
+                    </tr>
+                    )}
+            </tbody>
+        </Table>
+       </>
+
+    }
 
 
     render(){
         return <>
                 <Form>
-                    <p><b>Ingrese parámetros, o ninguno para traer a todos los usuarios:</b></p>
+                    <p><b>Ingrese parámetros para buscar usuarios</b></p>
                     <Row>
                         <Col>
                             <Form.Group controlId="formName">
@@ -64,10 +137,15 @@ export class SearchUser extends Component{
                             </Form.Group>
                         </Col>
                     </Row>
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" onClick={ (e) => this.findUsers(e)}>
                         Buscar
                     </Button> 
                 </Form>
+                {this.state.message.length == 0 ? null : this.state.message}
+                {this.state.searchResults.length == 0 ? null : 
+                this.showSearchResults(this.state.searchResults)
+                }
+                
                 <br />
                 </> 
                 
@@ -76,46 +154,3 @@ export class SearchUser extends Component{
 
 }
 
-
-{/* <Typeahead 
-id="countries"
-emptyLabel="Sin coincidencias." 
-paginationText="Mostrar más resultados..." 
-placeholder="Seleccione País" 
-options={this.state.countryList.map(ctry => ctry.name)}//aca va el array de countries
-onChange={(name) => this.findCountryCities(name)}
-/>  */}
-
-
-// componentDidMount(){
-//     debugger;
-//     axios.get(__API_COUNTRIES).then(response => {
-//         var countries = response.data
-//         this.setState({countryList : countries})
-
-//     }).catch(error => {
-//         console.log("Error getting countries: ")
-//         console.log(error)
-//     })
-
-// }
-
-
-// findCountryCities(name){
-//     debugger;
-//     if (name.length != 0){
-//         var url = __API_CITIES
-//         const countryId = this.state.countryList.find( ctry => ctry.name == name).id
-//         url+="/"+countryId
-        
-//         axios.get(url).then(response => {
-//             debugger;
-//             var cities = response.data
-//             this.setState({cityList : cities})
-//         }).catch(error =>{
-//             debugger;
-//             console.log("Error getting Cities: ",error)
-//         })
-//     }
-//     this.setState({cityList : []})
-// }

@@ -208,6 +208,42 @@ app.put('/updateUser',cors(), (request, response) =>  {
 }
 )
 
+/*GET findUsers*/ 
+app.options('/findUsers', (request, response) => {
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader('Access-Control-Allow-Methods', '*');
+    response.setHeader("Access-Control-Allow-Headers", "*");
+    response.end();
+})
+app.get('/findUsers',cors(), (request, response) =>  {
+    
+    var params = request.query
+    var name = params.name.length != 0  ? "'"+params.name+"'" : null
+    var surname = params.surname.length != 0 ? "'"+params.surname+"'" : null
+    var city = params.city.length != 0 ? "'"+params.city+"'" : null
+
+
+    const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
+         
+        connection.query("CALL search_customers("+name+","+surname+","+city+");", (error, result) =>
+            {
+            if (error) {
+                console.log("Error en GET SearchUser: ")
+                console.log(params,name,surname,city)
+                console.log(error)
+                response.send(JSON.stringify(error))
+            }
+            else{
+                console.log(params,name,surname,city)
+                console.log(result)
+                response.send(JSON.stringify(result))
+            }
+            }
+        )
+    })
+}
+)
+
 
 
 app.listen(port, () => {
