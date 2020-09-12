@@ -95,8 +95,10 @@ app.post('/insertUser',cors(), (request, response) =>  {
 
     const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
          
-        connection.query("CALL insert_customer('"+data.name+"','"+data.surname+"','"+data.email+"','"+data.store+"','"+data.address+"','"+data.district+
-                                                "','"+data.city+"','"+data.postCode+"','"+data.phone+"',@newAddress,@newCustomer)",
+        connection.query("CALL insert_customer('"+data.name+"','"+data.surname+"','"+data.email+"','"+
+                                                  data.store+"','"+data.address+"','"+data.district+
+                                                "','"+data.city+"','"+data.postCode+"','"+data.phone+
+                                                "',@newAddress,@newCustomer)",
             (error, result) => {
                 if (error) {
                     console.log("Error en POST Insert: ")
@@ -156,7 +158,8 @@ app.get('/getUser',cors(), (request, response) =>  {
 
     const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
          
-        connection.query("SELECT customer_id, customer.address_id as address_id, first_name, store_id,last_name,email,address,district,city.city_id as city_id, postal_code,phone,country_id from customer"+
+        connection.query("SELECT customer_id, customer.address_id as address_id, first_name, store_id,last_name,email,address,district,"+
+                         "city.city_id as city_id, postal_code,phone,country_id from customer"+
                          " inner join address on customer.address_id=address.address_id"+
                          " inner join city on address.city_id=city.city_id"+
                          " where customer.email = '"+email+"';", (error, result) =>
@@ -186,7 +189,6 @@ app.options('/updateUser', (request, response) => {
 })
 app.put('/updateUser',cors(), (request, response) =>  {
     var data = request.body
-
     const connection = odbc.connect("DSN=sakilaDB", (error,connection) => {
          
         connection.query("CALL update_customer('"+data.name+"','"+data.surname+"','"+data.email+"','"+data.store+"','"+data.address+"','"+data.district+
